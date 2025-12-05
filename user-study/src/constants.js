@@ -9,7 +9,7 @@ export const WEBSITES = {
 };
 
 export const DESIGN_APPROACH = {
-  BASELINE: "baseline" 
+  REVISIT: "revisit" 
 }
 
 export const EVENT_TYPES = {
