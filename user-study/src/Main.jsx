@@ -159,12 +159,12 @@ function Main() {
 
         <SessionIdField className="" sessionId={sessionId} />
         
-        <button
+        {/* <button
           className="h-10 px-4 bg-red-600 text-white rounded"
           onClick={resetSession}
         >
           RESET
-        </button>
+        </button> */}
       </div>
     );
   }
@@ -250,12 +250,12 @@ function Main() {
       Go To Next Page
     </button>
 
-    <button
+    {/* <button
       className="h-10 px-4 bg-red-600 text-white rounded"
       onClick={resetSession}
     >
       RESET
-    </button>
+    </button> */}
   </div>
     {/* CONSENT HISTORY ICON (and Panel) */}
     <ConsentHistory 
