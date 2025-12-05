@@ -50,6 +50,7 @@ export const EVENT_TYPES = {
   HISTORY_ITEM_UPDATE: "history_item_update",
   HISTORY_PANEL_OPEN: "history_panel_open",
   HISTORY_PANEL_CLOSE: "history_panel_close",
+  CONSENT_RETRACTED: "consent_retracted", // New event type
 
   // --- Session-level ---
   SESSION_STARTED: "session_started",
@@ -102,6 +103,7 @@ export const EVENT_TARGETS = {
   HISTORY_ITEM_CATEGORY_TOGGLE: "history_item_category_toggle",
   BTN_HISTORY_SAVE_CHANGES: "btn_history_save_changes",
   BTN_HISTORY_DISCARD_CHANGES: "btn_history_discard_changes",
+  BTN_RETRACT_CONSENT: "btn_retract_consent", // New button target
 
   // --- Your additional targets ---
   OUTSIDE_CMP: "outside_cmp",
@@ -119,6 +121,7 @@ export const META = {
   SHOW_CMP: "show_cmp",
   SESSION_STARTED: "sessionStarted",
   SESSION_ENDED: "sessionEnded",
+  CONSENT_HISTORY: "consentHistory", // New Local Storage key
 }
 
 export const PAGES = [

@@ -1,10 +1,25 @@
 import { useState, useEffect, useRef } from 'react';
 import { logEvent } from "./logger";
-import { EVENT_TARGETS, EVENT_TYPES } from "./constants";
+import { EVENT_TARGETS, EVENT_TYPES, META } from "./constants";
 
 function CMP({ sessionId, siteName, index, onClose }) {
   const [showMoreOptions, setShowMoreOptions] = useState(false);
   const hasLoggedRef = useRef(false);
+
+  // Helper to record consent in Local Storage
+  const recordConsent = (choice) => {
+    const historyString = localStorage.getItem(META.CONSENT_HISTORY) || "{}";
+    const history = JSON.parse(historyString);
+
+    history[siteName] = {
+      choice: choice,
+      timestamp: new Date().toISOString(),
+      step: index,
+    };
+
+    localStorage.setItem(META.CONSENT_HISTORY, JSON.stringify(history));
+  };
+
 
   useEffect(() => {
     if (hasLoggedRef.current) return; 
@@ -61,7 +76,7 @@ function CMP({ sessionId, siteName, index, onClose }) {
     );
   } 
 
-  function Button({ label, logTarget, extraOnClick }) {
+  function Button({ label, logTarget, extraOnClick, consentChoice }) {
     return (
       <button
         className="w-40 h-10 bg-blue-500 text-white uppercase hover:bg-blue-300"
@@ -74,6 +89,7 @@ function CMP({ sessionId, siteName, index, onClose }) {
             logTarget
           );
 
+          if (consentChoice) recordConsent(consentChoice); // Record consent
           if (extraOnClick) extraOnClick();
         }}
       >
@@ -123,7 +139,13 @@ function CMP({ sessionId, siteName, index, onClose }) {
           <ToggleRow label={"Essential cookies"} logTarget={EVENT_TARGETS.TOGGLE_NECESSARY}></ToggleRow>
           <div className="flex justify-evenly w-full mt-10">
             <Button label={"back"} logTarget={EVENT_TARGETS.BTN_BACK} extraOnClick={() => handleMoreOptions(false)}></Button>
-            <Button label={"submit"} logTarget={EVENT_TARGETS.BTN_SAVE_CUSTOM} extraOnClick={() => onClose(EVENT_TARGETS.CMP_SECOND_LAYER)}></Button>
+            {/* Record 'CUSTOM' consent when saving custom preferences */}
+            <Button 
+              label={"submit"} 
+              logTarget={EVENT_TARGETS.BTN_SAVE_CUSTOM} 
+              consentChoice="CUSTOM"
+              extraOnClick={() => onClose(EVENT_TARGETS.CMP_SECOND_LAYER)}
+            ></Button>
           </div>
         </div>
       </div>
@@ -141,8 +163,20 @@ function CMP({ sessionId, siteName, index, onClose }) {
         <p className="text-base">Our site collects and stores information about you, your preferences and behavior, and your device to analyze website traffic, personalize content and ads, and provide social media features.</p>
         <p className="text-base">Because we care about your privacy, you can decide whether to allow or reject the use of this technology.</p>    
         <div className="flex justify-evenly w-full mt-10">
-          <Button label={"accept all"} logTarget={EVENT_TARGETS.BTN_ACCEPT_ALL} extraOnClick={() => onClose(EVENT_TARGETS.CMP_FIRST_LAYER)}></Button>
-          <Button label={"reject all"} logTarget={EVENT_TARGETS.BTN_REJECT_ALL} extraOnClick={() => onClose(EVENT_TARGETS.CMP_FIRST_LAYER)}></Button>
+          {/* Record 'ACCEPT_ALL' consent */}
+          <Button 
+            label={"accept all"} 
+            logTarget={EVENT_TARGETS.BTN_ACCEPT_ALL} 
+            consentChoice="ACCEPT_ALL"
+            extraOnClick={() => onClose(EVENT_TARGETS.CMP_FIRST_LAYER)}
+          ></Button>
+          {/* Record 'REJECT_ALL' consent */}
+          <Button 
+            label={"reject all"} 
+            logTarget={EVENT_TARGETS.BTN_REJECT_ALL} 
+            consentChoice="REJECT_ALL"
+            extraOnClick={() => onClose(EVENT_TARGETS.CMP_FIRST_LAYER)}
+          ></Button>
           <Button label={"more options"} logTarget={EVENT_TARGETS.BTN_MORE_OPTIONS} extraOnClick={() => handleMoreOptions(true)}></Button>
         </div>
       </div>

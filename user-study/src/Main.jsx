@@ -1,4 +1,5 @@
 import CMP from "./CMP";
+import ConsentHistory from "./ConsentHistory";
 import { PAGES, EVENT_TYPES, EVENT_TARGETS, META } from "./constants";
 import { useStudySession } from "./useStudySession";
 import { useIsScreenTooSmall } from "./useIsScreenTooSmall";
@@ -23,6 +24,7 @@ function Main() {
   const tooSmall = useIsScreenTooSmall();
 
   const [dotIndex, setDotIndex] = useState(0);
+  const [autoShowHistory, setAutoShowHistory] = useState(false);
 
   const dotsVariants = [".", "..", "...", "..", "."];
 
@@ -35,6 +37,16 @@ function Main() {
 
     return () => clearInterval(interval);
   }, [isLoading, dotsVariants.length]);
+
+  // useEffect to clear consent history
+  useEffect(() => {
+    // Check if the component is rendering the "Welcome to the Study" screen (step === -1)
+    if (step === -1) {
+      console.log("Clearing consent history for new session.");
+      // Clear the consent history from Local Storage
+      localStorage.removeItem(META.CONSENT_HISTORY);
+    }
+  }, [step]);
 
   useEffect(() => {
     // SESSION START is in nextStep func
@@ -80,6 +92,9 @@ function Main() {
     setShowCMP(false);
     setShowValidationWarning(false);
     localStorage.setItem(META.SHOW_CMP, "false");
+    
+    // --- Trigger the history panel to open automatically ---
+    setAutoShowHistory(true);
   }
 
   if (tooSmall) {
@@ -144,12 +159,12 @@ function Main() {
 
         <SessionIdField className="" sessionId={sessionId} />
         
-        {/* <button
+        <button
           className="h-10 px-4 bg-red-600 text-white rounded"
           onClick={resetSession}
         >
           RESET
-        </button> */}
+        </button>
       </div>
     );
   }
@@ -190,7 +205,7 @@ function Main() {
 
   {/* WARNING IF NO CHOICE MADE */}
   {showValidationWarning && (
-    <div className="absolute top-4 w-full -translate-x-1/2 z-30"
+    <div className="absolute top-4 w-full flex justify-center z-30" // Removed -translate-x-1/2 since it's centered now
       onClick={(e) => e.stopPropagation()}>
       <div className="bg-red-600 text-white px-4 py-2 rounded shadow-lg flex justify-center items-center">
         <span>You must make a consent choice before continuing.</span>
@@ -235,14 +250,22 @@ function Main() {
       Go To Next Page
     </button>
 
-    {/* <button
+    <button
       className="h-10 px-4 bg-red-600 text-white rounded"
       onClick={resetSession}
     >
       RESET
-    </button> */}
+    </button>
   </div>
-</div>
+    {/* CONSENT HISTORY ICON (and Panel) */}
+    <ConsentHistory 
+      sessionId={sessionId} 
+      currentPage={currentPage} 
+      step={step} 
+      autoShow={autoShowHistory} // Pass the auto-show prop
+      setAutoShow={setAutoShowHistory} // Pass the setter to allow it to close itself
+    />
+  </div>
   );
 }
 
