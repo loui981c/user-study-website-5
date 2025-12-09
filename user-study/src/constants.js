@@ -50,8 +50,7 @@ export const EVENT_TYPES = {
   HISTORY_ITEM_UPDATE: "history_item_update",
   HISTORY_PANEL_OPEN: "history_panel_open",
   HISTORY_PANEL_CLOSE: "history_panel_close",
-  CONSENT_RETRACTED: "consent_retracted", // New event type
-
+  
   // --- Session-level ---
   SESSION_STARTED: "session_started",
   SESSION_ENDED: "session_ended",

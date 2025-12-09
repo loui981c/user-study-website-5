@@ -68,7 +68,7 @@ function ConsentHistory({ sessionId, currentPage, step, autoShow, setAutoShow })
       sessionId,
       siteName,
       step,
-      EVENT_TYPES.CONSENT_RETRACTED,
+      EVENT_TYPES.BUTTON_CLICK,
       EVENT_TARGETS.BTN_RETRACT_CONSENT
     );
 

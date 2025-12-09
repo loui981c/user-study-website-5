@@ -222,7 +222,7 @@ function Main() {
   {/* BOTTOM BUTTONS */}
   <div className="py-2 flex justify-center gap-4 bg-white/50 backdrop-blur-sm">
     <button
-      className="h-10 px-4 bg-black text-white rounded"
+      className="h-20 px-8 bg-green-500 text-white rounded text-xl cursor-pointer hover:bg-slate-400 font-bold"
       onClick={(e) => {
         e.stopPropagation()
         if (showCMP) {
